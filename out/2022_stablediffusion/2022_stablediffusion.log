@@ -1,4 +1,4 @@
-This is e-upTeX, Version 3.141592653-p4.0.0-u1.28-220214-2.6 (utf8.uptex) (TeX Live 2022) (preloaded format=uplatex 2022.11.21)  18 SEP 2023 21:13
+This is e-upTeX, Version 3.141592653-p4.0.0-u1.28-220214-2.6 (utf8.uptex) (TeX Live 2022) (preloaded format=uplatex 2022.11.21)  18 SEP 2023 22:41
 entering extended mode
  \write18 enabled.
  file:line:error style messages enabled.
@@ -1281,18 +1281,18 @@ LaTeX Font Info:    Font shape `JT2/hgt/m/n' will be
 (Font)              scaled to size 11.09619pt on input line 64.
 LaTeX Font Info:    Font shape `JY2/hgt/m/n' will be
 (Font)              scaled to size 11.09619pt on input line 64.
-[2] [3] (out/2022_stablediffusion/2022_stablediffusion.aux)
+[2] [3] [4] [5] (out/2022_stablediffusion/2022_stablediffusion.aux)
 Package rerunfilecheck Info: File `2022_stablediffusion.out' has not changed.
-(rerunfilecheck)             Checksum: D946B974576BBEC40254C079C2EA0B71;1531.
+(rerunfilecheck)             Checksum: C8FB32B5B3BFF43F6013EDC3A6F4578F;1938.
  ) 
 Here is how much of TeX's memory you used:
- 38279 strings out of 475422
- 777476 string characters out of 5788032
- 1149759 words of memory out of 5000000
- 59428 multiletter control sequences out of 15000+600000
+ 38580 strings out of 475422
+ 783457 string characters out of 5788032
+ 1150187 words of memory out of 5000000
+ 59729 multiletter control sequences out of 15000+600000
  523860 words of font info for 146 fonts, out of 8000000 for 9000
  934 hyphenation exceptions out of 8191
  99i,16n,94p,537b,1260s stack positions out of 10000i,1000n,20000p,200000b,200000s
 
-Output written on out/2022_stablediffusion/2022_stablediffusion.dvi (3 pages, 1
-8208 bytes).
+Output written on out/2022_stablediffusion/2022_stablediffusion.dvi (5 pages, 4
+0860 bytes).

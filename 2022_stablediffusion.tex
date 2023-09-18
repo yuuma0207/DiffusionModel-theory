@@ -77,13 +77,108 @@ KL情報量には
 \end{enumerate}
 といった性質がある。特に、KL情報量は$0$以上であるといった性質を良く用いる。この性質を2つの方法で証明してみる。
 \subsubsection*{Gibbsの不等式を用いる方法}
-Gibbsの不等式とは、$x\geq 0$において
+Gibbsの不等式とは、$x>0$において
 \begin{equation}
-  x-1\geq \ln{x}
+  x-1\geq \ln{x}\Longleftrightarrow \ln{\frac{1}{x}}\geq 1-x
 \end{equation}
 が成立する不等式である。
-
+\begin{figure}[H]
+  \centering
+\begin{tikzpicture}[scale=1.5]
+  \draw[->,>=stealth,semithick](-0.5,0)--(3.5,0)node[above]{$x$};%x軸
+  \draw[->,>=stealth,semithick](0,-1.5)--(0,2.5)node[right]{$y$};%y軸
+  \draw(0,0)node[below left]{O};%原点
+  \draw(1,0)node[above]{$1$};
+  \draw(0,-1)node[left]{$-1$};
+  \draw[magenta,very thick,domain=0:3.5]plot(\x,\x-1)node[right]{$y=x-1$};
+  \draw[blue,very thick,domain=0.3:3.5]plot(\x,{ln(\x)})node[right]{$y=\ln{x}$};
+  \end{tikzpicture}
+  \caption{Gibbsの不等式の直感的な理解}
+\end{figure}
+Gibbsの不等式を用いると、
+\begin{equation}
+  D_{\text{KL}}(p\parallel q) = \sum_{\vv{x}}p(\vv{x})\ln\frac{p(\vv{x})}{q(\vv{x})}
+  \geq \sum_{\vv{x}}p(\vv{x})\qty(1-\frac{q(\vv{x})}{p(\vv{x})}) 
+  = \sum_{\vv{x}}p(\vv{x})-\sum_{\vv{x}}q(\vv{x}) =0
+\end{equation}
+と示される。
+\newpage
 \subsubsection*{Jensenの不等式を用いる方法}
+Jensenの不等式とは、上に凸な関数$f(x)$に対して、
+\begin{equation}
+  f\qty(\frac{a+b}{2})\geq \frac{f(a)+f(b)}{2}
+\end{equation}
+が成立する不等式である。
+\begin{figure}[H]
+  \centering
+\begin{tikzpicture}[scale=1.5]
+  \coordinate(A)at(-2,0);
+  \coordinate(B)at(1,0);
+  \draw[->,>=stealth,semithick](-3.5,0)--(3.5,0)node[above]{$x$};%x軸
+  \draw[magenta,very thick,domain=-3:3]plot(\x,{-0.3*(\x-3)*(\x+3)});
+  \coordinate(YA)at(-2,1.5);
+  \coordinate(YB)at(1,2.4);
+  \draw[dashed](A)node[below]{$a$}--(YA);
+  \draw[dashed](B)node[below]{$b$}--(YB);
+  \draw[dashed](YA)--(YB);
+  \fill(YA)circle(0.05);
+  \fill(YB)circle(0.05);
+  \coordinate(XAB)at($(A)!1/2!(B)$);
+  \coordinate(YAB)at($(XAB)+(0,0.3*7/2*5/2)$);
+  \draw[dashed](XAB)node[below]{$\frac{a+b}{2}$}--(YAB);
+  \fill(YAB)circle(0.05);
+  \end{tikzpicture}
+  \caption{Jensenの不等式の直感的な理解}
+\end{figure}
+Jensenの不等式を用いると、
+\begin{equation}
+  D_{\text{KL}}(p\parallel q) = -\sum_{\vv{x}}p(\vv{x})\ln\frac{q(\vv{x})}{p(\vv{x})}
+  \geq -\ln\qty(\sum_{\vv{x}}p(\vv{x})\frac{q(\vv{x})}{p(\vv{x})}) = 0
+\end{equation}
+と示される。
+
+\subsection{例：ガウス分布のKL情報量と学習}
+モデル$q_{\theta}(\vv{x})$をガウス分布とおいて最適化を行う。人間が計算できるのはせいぜいガウス分布程度であるため、
+これ以上難しいモデルは考えない。まずは$\vv{x}$が1次元のスカラーである場合を考える：
+\begin{equation}
+  q_{\theta}(x)\propto \exp\qty(-\frac{1}{2\sigma^2}(x-\mu)^2)\;。
+\end{equation}
+規格化定数は
+\begin{equation}
+  Z_{\theta}=\int_{-\infty}^{\infty}dx\,\exp\qty(-\frac{1}{2\sigma^2}(x-\mu)^2) = \sqrt{2\pi\sigma^2}
+\end{equation}
+となる。したがって、
+\begin{equation}
+  q_{\theta}(x)=\frac{1}{\sqrt{2\pi\sigma^2}}\exp\qty(-\frac{1}{2\sigma^2}(x-\mu)^2)
+\end{equation}
+となる。このモデルの未知数は$\mu$と$\sigma^2$であるため、最適化すべきパラメータは$\theta=\{\mu,\,\sigma^2\}$となる。
+次に、KL情報量を考える。$q_{\theta}(x)$を$p(x)$に近づけることができれば良いのだが、あいにく$p(x)$の具体形はわからない。
+そのため、経験分布$p_0(x)=\sum_{i=1}^n\delta(x-x_i)$にモデルを近づけることを考える。KL情報量を計算すると、
+\begin{align}
+  D_{\text{KL}}(p_0\parallel q_{\theta}) = \int dx\,p_0(x)\qty(\ln{p_0(x)}-\ln{q_{\theta}(x)})
+  &\underbrace{=}_{\theta\text{のみ}} -\int dx\,p_0(x)\qty(\frac{1}{2\sigma^2}(x-\mu)^2+\frac{1}{2}\ln{\sigma^2}) \notag \\
+  &\;\,=\frac{1}{2\sigma^2}\frac{1}{n}\sum_{i=1}^n(x_i-\mu)^2+\frac{1}{2}\ln{\sigma^2}
+\end{align}
+となる。KL情報量を最小化（学習）すれば、経験分布に近いモデルが得られるため、$\mu$と$\sigma^2$で偏微分を行う。
+\begin{align}
+  \pdv{D_{\text{KL}}}{\mu} &= -\frac{1}{\sigma^2}\frac{1}{n}\sum_{i=1}^{n}(x_i-\mu) = 0
+  &&\Longleftrightarrow \mu = \frac{1}{n}\sum_{i=1}^nx_i\;\text{（データの平均）} \\
+  \pdv{D_{\text{KL}}}{\sigma^2} &= -\frac{1}{2(\sigma^2)^2}\frac{1}{n}\sum_{i=1}^n(x_i-\mu)^2 + \frac{1}{2\sigma^2}=0
+  &&\Longleftrightarrow \sigma^2 = \frac{1}{n}\sum_{i=1}^n(x_i-\mu)^2\;\text{（データの分散）}
+\end{align}
+この結果からわかることは、ガウス分布のモデルの平均$\mu$はデータの平均値に、モデルの分散$\sigma^2$はデータの分散にすれば、
+$p(x)$に近いモデル$q_{\theta}(x)$を生成できるということである。
+
+\subsection{最尤法（=KL最小化）}
+最尤法とは、KL情報量の最小化と同値なものであるが、良く使われるため紹介する。モデルの学習は、
+\begin{equation}
+  \min_{\theta}\qty{D_{\text{KL}}(p_0(\vv{x})\parallel q_{\theta}(\vv{x}))} 
+  = \max_{\theta}\qty{\sum_{\vv{x}}p(\vv{x})\ln{q_{\theta}(\vv{x})}} 
+  = \max_{\theta}\qty{\frac{1}{n}\sum_{i=1}^n\ln{q_{\theta}(\vv{x}_i)}}
+\end{equation}
+と変形することができる。$\ln{q_{\theta}(\vv{x}_i)}$を対数尤度関数と呼び、モデルの良さの指標として使われる。
+対数尤度を最大化することは、KL情報量の最小化と同値なものである。
+\subsection{高次元化}
 
 \section{隠れ変数を導入してリッチなモデルへ}
 
