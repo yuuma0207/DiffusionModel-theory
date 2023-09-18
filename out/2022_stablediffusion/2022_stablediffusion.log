@@ -1,4 +1,4 @@
-This is e-upTeX, Version 3.141592653-p4.0.0-u1.28-220214-2.6 (utf8.uptex) (TeX Live 2022) (preloaded format=uplatex 2022.11.21)  18 SEP 2023 18:44
+This is e-upTeX, Version 3.141592653-p4.0.0-u1.28-220214-2.6 (utf8.uptex) (TeX Live 2022) (preloaded format=uplatex 2022.11.21)  18 SEP 2023 21:13
 entering extended mode
  \write18 enabled.
  file:line:error style messages enabled.
@@ -432,6 +432,9 @@ Package bm Info: No bold for \U/msa/m/n, using \pmb.
 Package bm Info: No bold for \U/msb/m/n, using \pmb.
 Package bm Info: No bold for \U/rsfs/m/n, using \pmb.
 LaTeX Font Info:    Redeclaring math alphabet \mathbf on input line 149.
+) (/usr/local/texlive/2022/texmf-dist/tex/latex/esvect/esvect.sty
+Package: esvect 
+\symesvector=\mathgroup12
 ) (/usr/local/texlive/2022/texmf-dist/tex/latex/physics/physics.sty
 Package: physics 
 (/usr/local/texlive/2022/texmf-dist/tex/latex/l3packages/xparse/xparse.sty (/us
@@ -650,7 +653,7 @@ Package uniquecounter Info: New unique counter `rerunfilecheck' on input line 2
 )
 \Hy@SectionHShift=\skip86
 )
-Package hyperref Info: Option `colorlinks' set `true' on input line 40.
+Package hyperref Info: Option `colorlinks' set `true' on input line 41.
 (/usr/local/texlive/2022/texmf-dist/tex/platex/pxjahyper/pxjahyper.sty
 Package: pxjahyper 2022/10/19 v1.2a
 (/usr/local/texlive/2022/texmf-dist/tex/platex/pxjahyper/pxjahyper-enc.sty
@@ -1227,6 +1230,11 @@ LaTeX Font Info:    Font shape `JY2/gt/m/n' will be
 (Font)              scaled to size 7.39746pt on input line 10.
 LaTeX Font Info:    Font shape `JY2/gt/m/n' will be
 (Font)              scaled to size 5.5481pt on input line 10.
+LaTeX Font Info:    Trying to load font information for U+esvect on input line 
+10.
+(/usr/local/texlive/2022/texmf-dist/tex/latex/esvect/uesvect.fd
+File: uesvect.fd 
+)
 LaTeX Font Info:    Font shape `JT2/hmc/m/n' will be
 (Font)              scaled to size 8.32214pt on input line 10.
 LaTeX Font Info:    Font shape `JY2/hmc/m/n' will be
@@ -1247,24 +1255,44 @@ LaTeX Font Info:    Font shape `JT2/hgt/m/n' will be
 (Font)              scaled to size 13.31541pt on input line 16.
 LaTeX Font Info:    Font shape `JY2/hgt/m/n' will be
 (Font)              scaled to size 13.31541pt on input line 16.
-(out/2022_stablediffusion/2022_stablediffusion.toc)
+(out/2022_stablediffusion/2022_stablediffusion.toc
+LaTeX Font Info:    Font shape `JY2/hmc/m/n' will be
+(Font)              scaled to size 6.47278pt on input line 3.
+LaTeX Font Info:    Font shape `JY2/hmc/m/n' will be
+(Font)              scaled to size 4.62341pt on input line 3.
+LaTeX Font Info:    Font shape `JY2/gt/m/n' will be
+(Font)              scaled to size 9.24683pt on input line 3.
+LaTeX Font Info:    Font shape `JY2/gt/m/n' will be
+(Font)              scaled to size 6.47278pt on input line 3.
+LaTeX Font Info:    Font shape `JY2/gt/m/n' will be
+(Font)              scaled to size 4.62341pt on input line 3.
+)
 \tf@toc=\write5
 \openout5 = `2022_stablediffusion.toc'.
 
 [1
 
-] [2] (out/2022_stablediffusion/2022_stablediffusion.aux)
+]
+LaTeX Font Info:    Font shape `JT2/hmc/m/n' will be
+(Font)              scaled to size 6.47278pt on input line 28.
+LaTeX Font Info:    Font shape `JT2/hmc/m/n' will be
+(Font)              scaled to size 4.62341pt on input line 28.
+LaTeX Font Info:    Font shape `JT2/hgt/m/n' will be
+(Font)              scaled to size 11.09619pt on input line 64.
+LaTeX Font Info:    Font shape `JY2/hgt/m/n' will be
+(Font)              scaled to size 11.09619pt on input line 64.
+[2] [3] (out/2022_stablediffusion/2022_stablediffusion.aux)
 Package rerunfilecheck Info: File `2022_stablediffusion.out' has not changed.
-(rerunfilecheck)             Checksum: 437969B718B724353CB43993A15B3118;1246.
+(rerunfilecheck)             Checksum: D946B974576BBEC40254C079C2EA0B71;1531.
  ) 
 Here is how much of TeX's memory you used:
- 38174 strings out of 475422
- 775803 string characters out of 5788032
- 1127248 words of memory out of 5000000
- 59345 multiletter control sequences out of 15000+600000
- 516616 words of font info for 110 fonts, out of 8000000 for 9000
+ 38279 strings out of 475422
+ 777476 string characters out of 5788032
+ 1149759 words of memory out of 5000000
+ 59428 multiletter control sequences out of 15000+600000
+ 523860 words of font info for 146 fonts, out of 8000000 for 9000
  934 hyphenation exceptions out of 8191
- 99i,6n,94p,510b,1245s stack positions out of 10000i,1000n,20000p,200000b,200000s
+ 99i,16n,94p,537b,1260s stack positions out of 10000i,1000n,20000p,200000b,200000s
 
-Output written on out/2022_stablediffusion/2022_stablediffusion.dvi (2 pages, 6
-816 bytes).
+Output written on out/2022_stablediffusion/2022_stablediffusion.dvi (3 pages, 1
+8208 bytes).

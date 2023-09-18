@@ -2,7 +2,7 @@
 \documentclass[a4paper,11pt,uplatex]{jsarticle}%titlepage
 %:/usr/local/texlive/texmf-local/tex/latex/report/report.sty
 \usepackage{myreport}
-\title{生成モデルの数理情報学}
+\title{拡散モデル（Diffusion Model）を理解するために}
 \author{20B01392 松本侑真}
 \date{\today}
 \begin{document}
@@ -10,13 +10,80 @@
 \begin{abstract}
 近年、機械学習を応用した生成系AIがブームである。
 生成系AIを使うことで、プロンプトに入力したテキストデータから画像データなどを出力することができる。
-有名な生成系AIであるStable Diffusionでは、無料でプロンプトに入力した文字（例：かわいい犬）から、かわいい犬の画像を出力することができる。
-このような生成系AIを実装するにあたり、どのような理論的背景が存在するかを説明する。
+拡散モデルを用いた有名な生成系AIのStable Diffusionでは、無料でプロンプトに入力した文字（例：かわいい犬）から、かわいい犬の画像を出力することができる。
+このような生成系AIで用いられる拡散モデルについて理解するための基礎を説明する。
 \end{abstract}
 \tableofcontents
 \newpage
 
-\section{生成モデルとボルツマンマシン}
+\section{生成モデルでは何を行っているのか}
+生成モデル（拡散モデル）は、事前に与えられた教師データを元にモデルを学習することで、
+未知の入力に対して最適化された出力をアウトプットすることができる。
+例えば、いろいろな人間の顔データを学習させた生成モデルを用いると、
+「40歳のおじさん」や「20代のアイドル」といった入力を元にして、学習されたモデルで生成した顔画像を出力する。
+
+生成モデルの学習というのは、「モデルの入力から欲しいデータを生み出す確率分布」をいかにして見つけるかということである。
+すなわち、任意のデータ$\vv{x}$は、とある1つの確率分布$p(\vv{x})$に従って生み出されるという仮定のもと、自分のモデルをその$p(\vv{x})$に限りなく近づけることが生成モデルにおける学習である。
+すなわち、あらゆるデータが従う確率分布$p(\vv{x})$そのものを手に入れることができれば、$p(\vv{x})$の値を出力するような$\vv{x}$を見つけることが可能であるだろう。
+これによって、$p(\vv{x})=\text{「20代のアイドル」}$を満たす画像$\vv{x}$を出力することができる。
+
+\subsubsection*{学習を行う前に得られているもの}
+モデルの学習を行うためには、そのための学習データが必要である。$n$個の学習データ$\vv{x}_1,\,\vv{x}_2,\,\cdots,\,\vv{x}_n$が手元にあるとする。
+このとき、
+\begin{equation}
+  p_0(\vv{x}) = \frac{1}{n}\sum_{i=1}^{n}\delta(\vv{x}-\vv{x}_i)
+\end{equation}
+を経験分布と呼ぶ。この経験分布は、$n$が十分に大きいとき、あらゆるデータを生み出す確率分布$p(x)$に非常に近いであろう：
+\begin{equation}
+  p_0(\vv{x}) \approx p(\vv{x})\;。
+\end{equation}
+なお、データを連続変数として扱う場合は$\delta(\vv{x}-\vv{x}_i)$をデルタ関数、離散変数として扱う場合はクロネッカーのデルタとして扱う。
+
+\subsubsection*{学習のために必要なもの}
+生成モデルにおいて学習させるための確率分布は自ら用意する必要がある。すなわち、パラメータ$\theta$を用いて、
+\begin{equation}
+  p(\vv{x})\approx q_{\theta}(\vv{x})
+\end{equation}
+となるようなモデル$q_{\theta}(\vv{x})$を見つけたい。モデル$q_{\theta}(\vv{x})$の関数形は計算しやすい形を用いて、
+パラメータ$\theta$を最適化することで$p(\vv{x})$に近づけるというアプローチを取る。
+
+\section{ボルツマンマシン}
+ボルツマンマシンとは、モデル$q_{\theta}(\vv{x})$が
+\begin{equation}
+  q_{\theta}(\vv{x}) = \frac{1}{Z_{\theta}}\exp(-E_{\theta}(\vv{x}))\;。
+\end{equation}
+と表されるものである。このような関数形をGibbs-Boltzmann分布（指数関数分布族）と呼ぶ。
+ここで、規格化定数$Z_{\theta}$は
+\begin{equation}
+  Z_{\theta} = \sum_{\vv{x}}\exp(-E_{\theta}(\vv{x}))
+\end{equation}
+である。このように定義された$q_{\theta}(\vv{x})$を$p(\vv{x})$に近づけることが目標である。
+しかし、$p(\vv{x})$の形は誰も知らない。今手元にあるのは経験分布$p_0(\vv{x})$だけである。
+そのため、学習データの数$n$が十分に多いとして、$q_{\theta}(\vv{x})$を経験分布$p_0(\vv{x})$に近づけることを行う。
+
+\subsection{Kullback-Leibler情報量}
+学習を行うためには、2つの確率分布$p(\vv{x}),\,q(\vv{x})$の近さを定義する必要がある。
+この「近さ」は、データ$\vv{x}$を入力した際の2つの確率分布間の「距離$D(p\parallel q)$」を測ることで定義することができるだろう。
+このような関数$D(p\parallel q)$はどのように設定しても良いのだが、
+今回は、Kullback-Leibler divergence（KL情報量）$D_{\text{KL}}(p\parallel q)$を導入する：
+\begin{equation}
+  D_{\text{KL}}(p(\vv{x})\parallel q(\vv{x})) = \sum_{\vv{x}}p(\vv{x})\ln\frac{p(\vv{x})}{q(\vv{x})}\;。
+\end{equation}
+KL情報量には
+\begin{enumerate}
+  \renewcommand{\labelenumi}{(\roman{enumi}).}
+  \item $D(p\parallel q)\geq 0$（等号成立は$p=q$のとき）
+  \item $D(p\parallel q) \neq D(q\parallel p)$（非対称性）
+\end{enumerate}
+といった性質がある。特に、KL情報量は$0$以上であるといった性質を良く用いる。この性質を2つの方法で証明してみる。
+\subsubsection*{Gibbsの不等式を用いる方法}
+Gibbsの不等式とは、$x\geq 0$において
+\begin{equation}
+  x-1\geq \ln{x}
+\end{equation}
+が成立する不等式である。
+
+\subsubsection*{Jensenの不等式を用いる方法}
 
 \section{隠れ変数を導入してリッチなモデルへ}
 
