@@ -8,10 +8,10 @@
 \begin{document}
 \maketitle
 \begin{abstract}
-近年、機械学習を応用した生成系AIがブームである。
-生成系AIを使うことで、プロンプトに入力したテキストデータから画像データなどを出力することができる。
-拡散モデルを用いた有名な生成系AIのStable Diffusionでは、無料でプロンプトに入力した文字（例：かわいい犬）から、かわいい犬の画像を出力することができる。
-このような生成系AIで用いられる拡散モデルについて理解するための基礎を説明する。
+  近年、機械学習を応用した生成系AIがブームである。
+  生成系AIを使うことで、プロンプトに入力したテキストデータから画像データなどを出力することができる。
+  拡散モデルを用いた有名な生成系AIのStable Diffusionでは、無料でプロンプトに入力した文字（例：かわいい犬）から、かわいい犬の画像を出力することができる。
+  このような生成系AIで用いられる拡散モデルについて理解するための基礎を説明する。
 \end{abstract}
 \tableofcontents
 \newpage
@@ -84,21 +84,21 @@ Gibbsの不等式とは、$x>0$において
 が成立する不等式である。
 \begin{figure}[H]
   \centering
-\begin{tikzpicture}[scale=1.5]
-  \draw[->,>=stealth,semithick](-0.5,0)--(3.5,0)node[above]{$x$};%x軸
-  \draw[->,>=stealth,semithick](0,-1.5)--(0,2.5)node[right]{$y$};%y軸
-  \draw(0,0)node[below left]{O};%原点
-  \draw(1,0)node[above]{$1$};
-  \draw(0,-1)node[left]{$-1$};
-  \draw[magenta,very thick,domain=0:3.5]plot(\x,\x-1)node[right]{$y=x-1$};
-  \draw[blue,very thick,domain=0.3:3.5]plot(\x,{ln(\x)})node[right]{$y=\ln{x}$};
+  \begin{tikzpicture}[scale=1.5]
+    \draw[->,>=stealth,semithick](-0.5,0)--(3.5,0)node[above]{$x$};%x軸
+    \draw[->,>=stealth,semithick](0,-1.5)--(0,2.5)node[right]{$y$};%y軸
+    \draw(0,0)node[below left]{O};%原点
+    \draw(1,0)node[above]{$1$};
+    \draw(0,-1)node[left]{$-1$};
+    \draw[magenta,very thick,domain=0:3.5]plot(\x,\x-1)node[right]{$y=x-1$};
+    \draw[blue,very thick,domain=0.3:3.5]plot(\x,{ln(\x)})node[right]{$y=\ln{x}$};
   \end{tikzpicture}
   \caption{Gibbsの不等式の直感的な理解}
 \end{figure}
 Gibbsの不等式を用いると、
 \begin{equation}
   D_{\text{KL}}(p\parallel q) = \sum_{\vv{x}}p(\vv{x})\ln\frac{p(\vv{x})}{q(\vv{x})}
-  \geq \sum_{\vv{x}}p(\vv{x})\qty(1-\frac{q(\vv{x})}{p(\vv{x})}) 
+  \geq \sum_{\vv{x}}p(\vv{x})\qty(1-\frac{q(\vv{x})}{p(\vv{x})})
   = \sum_{\vv{x}}p(\vv{x})-\sum_{\vv{x}}q(\vv{x}) =0
 \end{equation}
 と示される。
@@ -111,22 +111,22 @@ Jensenの不等式とは、上に凸な関数$f(x)$に対して、
 が成立する不等式である。
 \begin{figure}[H]
   \centering
-\begin{tikzpicture}[scale=1.5]
-  \coordinate(A)at(-2,0);
-  \coordinate(B)at(1,0);
-  \draw[->,>=stealth,semithick](-3.5,0)--(3.5,0)node[above]{$x$};%x軸
-  \draw[magenta,very thick,domain=-3:3]plot(\x,{-0.3*(\x-3)*(\x+3)});
-  \coordinate(YA)at(-2,1.5);
-  \coordinate(YB)at(1,2.4);
-  \draw[dashed](A)node[below]{$a$}--(YA);
-  \draw[dashed](B)node[below]{$b$}--(YB);
-  \draw[dashed](YA)--(YB);
-  \fill(YA)circle(0.05);
-  \fill(YB)circle(0.05);
-  \coordinate(XAB)at($(A)!1/2!(B)$);
-  \coordinate(YAB)at($(XAB)+(0,0.3*7/2*5/2)$);
-  \draw[dashed](XAB)node[below]{$\frac{a+b}{2}$}--(YAB);
-  \fill(YAB)circle(0.05);
+  \begin{tikzpicture}[scale=1.5]
+    \coordinate(A)at(-2,0);
+    \coordinate(B)at(1,0);
+    \draw[->,>=stealth,semithick](-3.5,0)--(3.5,0)node[above]{$x$};%x軸
+    \draw[magenta,very thick,domain=-3:3]plot(\x,{-0.3*(\x-3)*(\x+3)});
+    \coordinate(YA)at(-2,1.5);
+    \coordinate(YB)at(1,2.4);
+    \draw[dashed](A)node[below]{$a$}--(YA);
+    \draw[dashed](B)node[below]{$b$}--(YB);
+    \draw[dashed](YA)--(YB);
+    \fill(YA)circle(0.05);
+    \fill(YB)circle(0.05);
+    \coordinate(XAB)at($(A)!1/2!(B)$);
+    \coordinate(YAB)at($(XAB)+(0,0.3*7/2*5/2)$);
+    \draw[dashed](XAB)node[below]{$\frac{a+b}{2}$}--(YAB);
+    \fill(YAB)circle(0.05);
   \end{tikzpicture}
   \caption{Jensenの不等式の直感的な理解}
 \end{figure}
@@ -156,15 +156,15 @@ Jensenの不等式を用いると、
 そのため、経験分布$p_0(x)=\sum_{i=1}^n\delta(x-x_i)$にモデルを近づけることを考える。KL情報量を計算すると、
 \begin{align}
   D_{\text{KL}}(p_0\parallel q_{\theta}) = \int dx\,p_0(x)\qty(\ln{p_0(x)}-\ln{q_{\theta}(x)})
-  &\underbrace{=}_{\theta\text{のみ}} -\int dx\,p_0(x)\qty(\frac{1}{2\sigma^2}(x-\mu)^2+\frac{1}{2}\ln{\sigma^2}) \notag \\
-  &\;\,=\frac{1}{2\sigma^2}\frac{1}{n}\sum_{i=1}^n(x_i-\mu)^2+\frac{1}{2}\ln{\sigma^2}
+   & \underbrace{=}_{\theta\text{のみ}} -\int dx\,p_0(x)\qty(\frac{1}{2\sigma^2}(x-\mu)^2+\frac{1}{2}\ln{\sigma^2}) \notag \\
+   & \;\,=\frac{1}{2\sigma^2}\frac{1}{n}\sum_{i=1}^n(x_i-\mu)^2+\frac{1}{2}\ln{\sigma^2}
 \end{align}
 となる。KL情報量を最小化（学習）すれば、経験分布に近いモデルが得られるため、$\mu$と$\sigma^2$で偏微分を行う。
 \begin{align}
-  \pdv{D_{\text{KL}}}{\mu} &= -\frac{1}{\sigma^2}\frac{1}{n}\sum_{i=1}^{n}(x_i-\mu) = 0
-  &&\Longleftrightarrow \mu = \frac{1}{n}\sum_{i=1}^nx_i\;\text{（データの平均）} \\
-  \pdv{D_{\text{KL}}}{\sigma^2} &= -\frac{1}{2(\sigma^2)^2}\frac{1}{n}\sum_{i=1}^n(x_i-\mu)^2 + \frac{1}{2\sigma^2}=0
-  &&\Longleftrightarrow \sigma^2 = \frac{1}{n}\sum_{i=1}^n(x_i-\mu)^2\;\text{（データの分散）}
+  \pdv{D_{\text{KL}}}{\mu}      & = -\frac{1}{\sigma^2}\frac{1}{n}\sum_{i=1}^{n}(x_i-\mu) = 0
+                                &                                                                                      & \Longleftrightarrow \mu = \frac{1}{n}\sum_{i=1}^nx_i\;\text{（データの平均）}              \\
+  \pdv{D_{\text{KL}}}{\sigma^2} & = -\frac{1}{2(\sigma^2)^2}\frac{1}{n}\sum_{i=1}^n(x_i-\mu)^2 + \frac{1}{2\sigma^2}=0
+                                &                                                                                      & \Longleftrightarrow \sigma^2 = \frac{1}{n}\sum_{i=1}^n(x_i-\mu)^2\;\text{（データの分散）}
 \end{align}
 この結果からわかることは、ガウス分布のモデルの平均$\mu$はデータの平均値に、モデルの分散$\sigma^2$はデータの分散にすれば、
 $p(x)$に近いモデル$q_{\theta}(x)$を生成できるということである。
@@ -172,13 +172,55 @@ $p(x)$に近いモデル$q_{\theta}(x)$を生成できるということであ�
 \subsection{最尤法（=KL最小化）}
 最尤法とは、KL情報量の最小化と同値なものであるが、良く使われるため紹介する。モデルの学習は、
 \begin{equation}
-  \min_{\theta}\qty{D_{\text{KL}}(p_0(\vv{x})\parallel q_{\theta}(\vv{x}))} 
-  = \max_{\theta}\qty{\sum_{\vv{x}}p(\vv{x})\ln{q_{\theta}(\vv{x})}} 
+  \min_{\theta}\qty{D_{\text{KL}}(p_0(\vv{x})\parallel q_{\theta}(\vv{x}))}
+  = \max_{\theta}\qty{\sum_{\vv{x}}p(\vv{x})\ln{q_{\theta}(\vv{x})}}
   = \max_{\theta}\qty{\frac{1}{n}\sum_{i=1}^n\ln{q_{\theta}(\vv{x}_i)}}
 \end{equation}
 と変形することができる。$\ln{q_{\theta}(\vv{x}_i)}$を対数尤度関数と呼び、モデルの良さの指標として使われる。
 対数尤度を最大化することは、KL情報量の最小化と同値なものである。
 \subsection{高次元化}
+先ほどはガウス分布のモデルの1次元バージョンの最適化を行った。一般の場合にどのように拡張されるかを見る。
+すなわち、
+\begin{equation}
+  q_{\theta}(\vv{x}) \propto \exp\qty(-\frac{1}{2}(\vv{x}-\vv{\mu})^{\top}\Sigma^{-1}(\vv{x}-\vv{\mu}))
+\end{equation}
+とする。規格化定数は
+\begin{equation}
+  Z_{\theta} = \int d\vv{x}\,\exp\qty(-\frac{1}{2}(\vv{x}-\vv{\mu})^{\top}\Sigma^{-1}(\vv{x}-\vv{\mu}))
+\end{equation}
+となる。このままでは規格化定数の計算ができないが、$\Sigma^{-1}$の対角化を行うことで計算を進めることができる。ある正方行列$P$を用いて、
+\begin{equation}
+  \begin{cases}
+    P^{-1}\Sigma^{-1}P      & = \Lambda = \mqty(\dmat{\lambda_1,\lambda_2,\ddots,\lambda_N}) \\
+    P^{-1}(\vv{x}-\vv{\mu}) & = \vv{y}
+  \end{cases}
+\end{equation}
+と対角化できたとする。$\Sigma$は分散共分散行列と呼ばれる。このとき、
+\begin{equation}
+  Z_{\theta} = \int d\vv{y}\,\exp\qty(-\frac{1}{2}\vv{y}^{\top}\Lambda\vv{y})
+  = \prod_{k=1}^{N}\int d\vv{y}_k\,\exp\qty(-\frac{1}{2}\lambda_{k}y_{k}^2)
+  = \prod_{k=1}^{N}\sqrt{\frac{2\pi}{\lambda_k}}
+\end{equation}
+と計算できる。行列のdeterminantの性質
+\begin{equation}
+  \prod_{k=1}^{N}\lambda_k = \det(\Lambda) = \det(\Sigma^{-1}) = \frac{1}{\det(\Sigma)}
+\end{equation}
+を用いると、
+\begin{equation}
+  Z_{\theta} = \sqrt{(2\pi)^{N}\det(\Sigma)}
+\end{equation}
+のように、分散共分散行列$\Sigma$を用いて計算できる。
+したがって、
+\begin{equation}
+  q_{\theta}(\vv{x}) = \sqrt{\frac{1}{(2\pi)^N\det(\Sigma)}}
+  \exp\qty(-\frac{1}{2}(\vv{x}-\vv{\mu})^{\top}\Sigma^{-1}(\vv{x}-\vv{\mu}))
+\end{equation}
+となる。KL情報量は、
+\begin{equation}
+  D_{\text{KL}}(p_0\parallel q_{\theta}) = \int d\vv{x}\,p_0(\vv{x})\qty(\ln{p_0(\vv{x})}-q_{\theta}(\vv{x}))
+  \underbrace{=}_{\theta\text{のみ}}\frac{1}{2n}\sum_{i=1}^{n}(\vv{x}-\vv{\mu})^{\top}\Sigma^{-1}(\vv{x}-\vv{\mu}) + \frac{1}{2}\ln\det(\Sigma)
+\end{equation}
+と計算できる。
 
 \section{隠れ変数を導入してリッチなモデルへ}
 
