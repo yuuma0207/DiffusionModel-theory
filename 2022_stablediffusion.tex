@@ -71,7 +71,6 @@
 \end{equation}
 KL情報量には
 \begin{enumerate}
-  \renewcommand{\labelenumi}{(\roman{enumi}).}
   \item $D(p\parallel q)\geq 0$（等号成立は$p=q$のとき）
   \item $D(p\parallel q) \neq D(q\parallel p)$（非対称性）
 \end{enumerate}
@@ -91,7 +90,7 @@ Gibbsの不等式とは、$x>0$において
     \draw(1,0)node[above]{$1$};
     \draw(0,-1)node[left]{$-1$};
     \draw[magenta,very thick,domain=0:3.5]plot(\x,\x-1)node[right]{$y=x-1$};
-    \draw[blue,very thick,domain=0.3:3.5]plot(\x,{ln(\x)})node[right]{$y=\ln{x}$};
+    \draw[cyan,very thick,domain=0.3:3.5]plot(\x,{ln(\x)})node[right]{$y=\ln{x}$};
   \end{tikzpicture}
   \caption{Gibbsの不等式の直感的な理解}
 \end{figure}
@@ -288,7 +287,7 @@ Isingモデルにおけるパラメータの最適化は勾配法によって行
 \begin{equation}
   f(\theta)\leq f(\theta_0)-\frac{(f'(\theta_0))^2}{2L}
 \end{equation}
-となり、確実に関数の値が減少する。最小化したい関数に対して、簡単な形の上界を持ってきて最小化することが勾配法の仕組みである。そのため、学習率$\eta$は
+となり、確実に関数の値が減少する。最小化したい関数に対して、簡単な形の上界の最小値を代わりに求めることが勾配法の原理である。そのため、学習率$\eta$は
 \begin{equation}
   \eta=\frac{1}{L}
 \end{equation}
@@ -299,20 +298,68 @@ Isingモデルにおけるパラメータの最適化は勾配法によって行
     \draw[->,>=stealth,semithick](-0.5,0)--(4.5,0)node[above]{$\theta$};%x軸
     \draw[->,>=stealth,semithick](0,-0.5)--(0,3.5)node[right]{$y$};%y軸
     \draw(0,0)node[below left]{O};%原点
-    \draw(1,0)node[above]{$1$};
     \begin{scope} \clip (0,0) rectangle (4.5,3);
       \draw[magenta,very thick]plot(\x,{(3*pow(\x-0.3,4)-16*pow(\x-0.3,3)+18*pow(\x-0.4,2))/25+2});
-      \draw[magenta,very thick]plot(\x,{(3*pow(2.5-0.3,4)-16*pow(2.5-0.3,3)+18*pow(2.5-0.4,2))/25+2 + (3*4*pow(2.5-0.3,3)-16*3*pow(2.5-0.3,2)+18*2*pow(2.5-0.4,1))*(\x-2.5)/25 + 2*pow(\x-2.5,2)});
+      \draw[cyan,very thick]plot(\x,{(3*pow(2.5-0.3,4)-16*pow(2.5-0.3,3)+18*pow(2.5-0.4,2))/25+2 + (3*4*pow(2.5-0.3,3)-16*3*pow(2.5-0.3,2)+18*2*pow(2.5-0.4,1))*(\x-2.5)/25 + 1/2*4*pow(\x-2.5,2)});
     \end{scope}
-    \draw(4.5,3)node[right]{$y=f(\theta)$};
+    \draw[magenta](4.5,3)node[right]{$y=f(\theta)$};
+    \draw[cyan](4,3)node[above]{$y=g(\theta)$};
+    \draw[dashed](2.5,0)node[below]{$\theta_0$}--(2.5,{(3*pow(2.5-0.3,4)-16*pow(2.5-0.3,3)+18*pow(2.5-0.4,2))/25+2});
+    \coordinate(A) at ({2.5-(3*4*pow(2.5-0.3,3)-16*3*pow(2.5-0.3,2)+18*2*pow(2.5-0.4,1))/(25*4)},0);
+    \draw(A)node[below]{$\theta$};
+    \draw[dashed](A)--($(A)+(0,{(3*pow(2.5-0.3,4)-16*pow(2.5-0.3,3)+18*pow(2.5-0.4,2))/25+2 - pow((3*4*pow(2.5-0.3,3)-16*3*pow(2.5-0.3,2)+18*2*pow(2.5-0.4,1))/25,2)/(2*4)})$);
   \end{tikzpicture}
-  \caption{関数を上から抑えるということ}
+  \caption{勾配法の図形的な意味（最小化したい$y=f(x)$について、$y=g(x)$は局所的な上界となっている。）}
 \end{figure}
 
 
-
-
 \subsubsection{代理関数}
+勾配法の原理は、上界最小化として理解されることを見た。先ほどの$g(\theta)$のように、最適化問題において元の関数の代わりに最適化される関数を代理関数（surrogate function）と呼ぶ。
+最適化したいスカラー値関数$f(\vv{\theta})$に対して、
+\begin{equation}
+  f_{\eta}(\vv{\theta},\vv{\theta}_0)=f(\vv{\theta}_0)+\grad{f(\vv{\theta}_0)}\cdot(\vv{\theta}-\vv{\theta}_0)+\frac{1}{2}(\vv{\theta}-\vv{\theta}_0)^{\top}\frac{1}{\eta}(\vv{\theta}-\vv{\theta}_0)
+\end{equation}
+とする。$\eta$はスカラーである。このとき、$\eta$が満たすべき条件式は、パラメータ$\theta$に対して
+\begin{equation}
+  d(\vv{\theta}) = f(\vv{\theta})-f_{\eta}(\vv{\theta},\vv{\theta}_0)\leq 0
+\end{equation}
+が常に成立することである。特に、$d(\vv{\theta}_0)=0$であるため、$f_{\eta}(\vv{\theta},\vv{\theta}_0) < f_{\eta}(\vv{\theta}_0,\vv{\theta}_0)$を満たす$\theta$に対して
+$f(\vv{\theta})< f(\vv{\theta}_0)$となることがわかる。
+
+$\eta$についての条件を具体的に考える。$d(\vv{\theta}_0)=0$であるため、全ての成分について$\grad{d(\vv{\theta})}\leq 0$が常に成立すれば良い。
+\begin{equation}
+  \grad{d(\vv{\theta})} = \grad{f(\vv{\theta})}-\grad{f(\vv{\theta}_0)}-\frac{1}{\eta}(\vv{\theta}-\vv{\theta}_0)
+\end{equation}
+である。したがって、$\grad{d(\vv{\theta}_0)}=0$であり、
+\begin{equation}
+  (\grad\grad^{\top})d(\vv{\theta})=(\grad\grad^{\top})f(\vv{\theta}) - \frac{1}{\eta}I = H(f)-\frac{1}{\eta}I
+\end{equation}
+となる。なお、$H(f)$はHesse行列である。したがって、任意のベクトル$\vv{a}$について
+\begin{equation}
+  \vv{a}^{\top}\qty(H(f)-\frac{1}{\eta} I)\vv{a} \leq 0
+\end{equation}
+であれば、全ての成分について$\grad{d(\vv{\theta})}\leq 0$となる。
+ここで、$f(\vv{\theta})$は$C^2$級とすると、$H(f)_{ij}=H(f)_{ji}$から、適当な直交行列$P$を用いて$H(f)$を対角化することができる。
+したがって、
+\begin{equation}
+  \begin{cases}
+    P^{-1}H(f)P    & = \Lambda = \mqty(\dmat{\lambda_1,\lambda_2,\ddots,\lambda_N}) \\
+    P^{-1}(\vv{a}) & = \vv{b}
+  \end{cases}
+\end{equation}
+とおくと、
+\begin{equation}
+  \vv{b}^{\top}\qty(\Lambda-\frac{1}{\eta} I)\vv{b} = \sum_{i=k}^n(\lambda_k-\frac{1}{\eta})b_k^2 \leq 0
+\end{equation}
+が成立すれば良い。したがって、学習率$\eta$の十分条件は、
+\begin{equation}
+  \eta\leq \frac{1}{\max_{k}{\lambda_k}}
+\end{equation}
+である。
+
+
+
+
 
 \section{隠れ変数を導入してリッチなモデルへ}
 
