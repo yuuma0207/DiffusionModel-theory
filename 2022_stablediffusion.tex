@@ -423,18 +423,18 @@ $i$番目のデータに関して、ラベル$k$のガウス分布の重み$\gam
     \draw(0,0)node[below left]{O};%原点
     \begin{scope} \clip (0,0) rectangle (4.2,2);
       \draw[black,very thick]plot(\x,{4*0.45*exp(-1*pow((\x-1.5),2)/(0.3))+4*0.35*exp(-1*pow((\x-2.5),2)/(0.2))+4*0.2*exp(-1*pow((\x-3.5),2)/(0.8))});
-      \draw[magenta,very thick]plot(\x,{4*0.45*exp(-1*pow((\x-1.5),2)/(0.3))});
-      \draw[cyan,very thick]plot(\x,{4*0.35*exp(-1*pow((\x-2.5),2)/(0.2))});
-      \draw[orange,very thick]plot(\x,{4*0.2*exp(-1*pow((\x-3.5),2)/(0.8))});
+      \draw[densely dashed,magenta,ultra thick]plot(\x,{4*0.45*exp(-1*pow((\x-1.5),2)/(0.3))});
+      \draw[densely dashed,cyan,ultra thick]plot(\x,{4*0.35*exp(-1*pow((\x-2.5),2)/(0.2))});
+      \draw[densely dashed,orange,ultra thick]plot(\x,{4*0.2*exp(-1*pow((\x-3.5),2)/(0.8))});
     \end{scope}
     \draw[magenta](1.5,2)node[above]{$k=1$};
-    \draw[dashed,magenta](1.5,0)node[below]{$\vv{\mu}_1$}--(1.5,4*0.45);
+    \draw[thick,dashed,magenta](1.5,0)node[below]{$\vv{\mu}_1$}--(1.5,4*0.45);
     \draw[cyan](2.5,2)node[above]{$k=2$};
-    \draw[dashed,cyan](2.5,0)node[below]{$\vv{\mu}_2$}--(2.5,4*0.35);
+    \draw[thick,dashed,cyan](2.5,0)node[below]{$\vv{\mu}_2$}--(2.5,4*0.35);
     \draw[orange](3.5,2)node[above]{$k=3$};
-    \draw[dashed,orange](3.5,0)node[below]{$\vv{\mu}_3$}--(3.5,4*0.20);
+    \draw[thick,dashed,orange](3.5,0)node[below]{$\vv{\mu}_3$}--(3.5,4*0.20);
   \end{tikzpicture}
-  \caption{3つの混合ガウス分布によるモデル$q_{\theta}$（黒線）の概念図}
+  \caption{3つの混合ガウス分布によるモデル$q_{\theta}$（実線）の概念図}
 \end{figure}
 
 \subsection{隠れ変数}
