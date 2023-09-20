@@ -357,11 +357,84 @@ $\eta$についての条件を具体的に考える。$d(\vv{\theta}_0)=0$であ
 \end{equation}
 である。
 
-
-
-
-
 \section{隠れ変数を導入してリッチなモデルへ}
+ボルツマンマシンにおいて、簡単に計算できるエネルギー関数はせいぜいガウス型までであった。
+しかし、このままでは単純なモデルしか生成することができない。そのため、異なる平均と分散を持つガウス関数の線形結合を取ったものをモデルとしてみる：
+\begin{equation}
+  q_{\theta}(\vv{x}) = \sum_{k\in I}\frac{C_k}{\sqrt{(2\pi)^N\det(\Sigma_k)}}\exp(-\frac{1}{2}(\vv{x}-\vv{\mu}_k)^{\top}\Sigma^{-1}_{k}(\vv{x}-\vv{\mu}_k))\;。
+\end{equation}
+ここで、$k\in I$はガウス分布$\mathcal{N}(\vv{\mu}_k,\Sigma_k)$のラベルとその集合を表している。
+また、規格化条件$\int dx\,q_{\theta}(\vv{x})=1$から、
+\begin{equation}
+  \sum_{k\in I}C_k = 1
+\end{equation}
+が課されている。最尤法によりパラメータの最適化を行う。すなわち、
+\begin{equation}
+  \max_{\theta}\qty{\frac{1}{n}\sum_{i=1}^n\ln{q_{\theta}(\vv{x}_i)}} = \max_{\theta}\qty{\frac{1}{n}\sum_{i=1}^{n}
+    \ln\qty[\sum_{k\in I}\frac{C_k}{\sqrt{(2\pi)^N\det(\Sigma_k)}}\exp(-\frac{1}{2}(\vv{x}_i-\vv{\mu}_k)^{\top}\Sigma_k^{-1}(\vv{x}_i-\vv{\mu}_k))]}
+\end{equation}
+を考える。まずは、$\vv{\mu}_k$についての偏微分を考える。
+\begin{align}
+  \pdv{\vv{\mu}_k} & :  \frac{1}{n}\sum_{i=1}^{n}\underbrace{\frac{C_k\exp(\cdots)/\sqrt{(2\pi)^{N}\det(\Sigma_k)}}{\sum_{k\in I}C_k\exp(\cdots)/\sqrt{(2\pi)^N\det(\Sigma_k)}}}_{=\gamma_{ik}:\text{負担率}}
+  \times\Sigma_k^{-1}(\vv{x}_i-\vv{\mu}_k) \notag                                                                                                                                                          \\
+                   & = \frac{1}{n}\sum_{i=1}^{n}\gamma_{ik}\Sigma_k^{-1}(\vv{x}_i-\vv{\mu}_k) = 0 \Longleftrightarrow \vv{\mu}_k = \frac{\sum_{i=1}^{n}\gamma_{ik}\vv{x}_i}{\sum_{i=1}^{n}\gamma_{ik}}
+\end{align}
+$i$番目のデータに関して、ラベル$k$のガウス分布の重み$\gamma_{ik}$を負担率と呼ぶ。負担率を用いて、$\vv{\mu}_k$はデータの重み付き平均を取れば最適化できることがわかる。
+なお、負担率は$\theta=\{\vv{\mu}_{k},\Sigma_{k}\mid k\in I \},\,C=\{C_k\mid k\in I \}$の関数となっている。
+次に、$\Sigma_k$についての偏微分を考える：
+\begin{equation}
+  \pdv{\Sigma^{-1}_k} : -\frac{1}{2n}\sum_{i=1}^n \gamma_{ik}(\vv{x}_i-\vv{\mu}_k)(\vv{x}_i - \vv{\mu}_k)^{\top} + \frac{1}{2n}\sum_{i=1}^{n}\gamma_{ik}\Sigma_{k} = 0\;。
+\end{equation}
+したがって、ラベル$k$のガウス分布の分散共分散行列の最適化は
+\begin{equation}
+  \Sigma_k = \frac{\sum_{i=1}^n \gamma_{ik}(\vv{x}_i-\vv{\mu}_k)(\vv{x}_i - \vv{\mu}_k)^{\top} }{\sum_{i=1}^n \gamma_{ik}}
+\end{equation}
+と求まる。しかし、これで終わりではない。線形結合の重みづけについての最適化も考えないといけない。重みづけに制約条件が課されているため、考えないといけない最適化問題はLagrangeの未定乗数$\lambda$を含めた
+\begin{equation}
+  \max_{\theta}\qty{\frac{1}{n}\sum_{i=1}^n\ln{q_{\theta}(\vv{x}_i)} + \lambda\qty(\sum_{k\in I}C_k-1)}
+\end{equation}
+である。しかし、先ほどの議論は未定乗数を含めても修正する必要はなく、$C_k$についての偏微分を新たに考えれば良い。すなわち、
+\begin{equation}
+  \pdv{C_k}: \frac{1}{n}\sum_{i=1}^{n}\frac{\gamma_{ik}}{C_k} + \lambda = 0 \Longleftrightarrow \lambda C_k = -\frac{1}{n}\sum_{i=1}^n \gamma_{ik}
+\end{equation}
+となる。$k$についての和を取ると、
+\begin{equation}
+  \lambda = -\frac{1}{n}\sum_{i=1}^n \sum_{k\in I}\gamma_{ik}
+\end{equation}
+と求まるため、$C_k$について解きなおすと
+\begin{equation}
+  C_k = \frac{\sum_{i=1}^{n}\gamma_{ik}}{\sum_{i=1}^{n}\sum_{k\in I}\gamma_{ik}}
+\end{equation}
+と求まる。以上の結果から、繰り返しパラメータの更新を行うことで最適解を求めることができる。
+アルゴリズムとしては以下のようになる：
+\begin{enumerate}
+  \item $\gamma_{ik}$を適当な値に初期化する
+  \item $\gamma_{ik}$を固定したまま、パラメータ$\theta,\,C$を最適化する
+  \item Bで最適化したパラメータ$\theta,\,C$を用いて$\gamma_{ik}$を更新する
+  \item $\gamma_{ik}$が収束するまでBとCを繰り返す
+\end{enumerate}
+\begin{figure}[H]
+  \centering
+  \begin{tikzpicture}[scale=3,samples=300]
+    \draw[->,>=stealth,semithick](-0.5,0)--(4.5,0)node[above]{$\vv{x}$};%x軸
+    \draw[->,>=stealth,semithick](0,-0.5)--(0,2)node[right]{$y=q_{\theta}(\vv{x})$};%y軸
+    \draw(0,0)node[below left]{O};%原点
+    \begin{scope} \clip (0,0) rectangle (4.2,2);
+      \draw[black,very thick]plot(\x,{4*0.45*exp(-1*pow((\x-1.5),2)/(0.3))+4*0.35*exp(-1*pow((\x-2.5),2)/(0.2))+4*0.2*exp(-1*pow((\x-3.5),2)/(0.8))});
+      \draw[magenta,very thick]plot(\x,{4*0.45*exp(-1*pow((\x-1.5),2)/(0.3))});
+      \draw[cyan,very thick]plot(\x,{4*0.35*exp(-1*pow((\x-2.5),2)/(0.2))});
+      \draw[orange,very thick]plot(\x,{4*0.2*exp(-1*pow((\x-3.5),2)/(0.8))});
+    \end{scope}
+    \draw[magenta](1.5,2)node[above]{$k=1$};
+    \draw[dashed,magenta](1.5,0)node[below]{$\vv{\mu}_1$}--(1.5,4*0.45);
+    \draw[cyan](2.5,2)node[above]{$k=2$};
+    \draw[dashed,cyan](2.5,0)node[below]{$\vv{\mu}_2$}--(2.5,4*0.35);
+    \draw[orange](3.5,2)node[above]{$k=3$};
+    \draw[dashed,orange](3.5,0)node[below]{$\vv{\mu}_3$}--(3.5,4*0.20);
+  \end{tikzpicture}
+  \caption{3つの混合ガウス分布によるモデル$q_{\theta}$の概念図}
+\end{figure}
+
 
 \section{制限ボルツマンマシン}
 
