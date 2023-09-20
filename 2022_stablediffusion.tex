@@ -261,7 +261,58 @@ Isingモデルにおけるパラメータの最適化は勾配法によって行
   \right.
 \end{equation}
 のようにする。$\theta=\{h,J\}\to\theta' = \{h',J'\}$へ更新する作業を繰り返すことで、パラメータの最適化を行うことができる。なお、$\eta_k,\eta_{kl}$は勾配法の学習率と呼ばれ、小さな値が設定される。
-パラメータがある値に収束するように学習率を適切に設定する。
+パラメータがある値に収束するように学習率を適切に設定する。実用的には学習率の値を適当に決めることが多いが、ここでは勾配法の理論を簡単に紹介する。
+
+\subsubsection{勾配法の仕組み}
+パラメータ$\theta$で特徴づけられた微分可能な関数$f(\theta)$を最小化することを考える。勾配法とは、$\theta$を徐々に動かして関数の最小値（極小値）を探索するアルゴリズムである。
+しかし、$\theta$を動かした際に関数値が小さくならなければ最小値の探索を行うことができない。すなわち、現在のパラメータを$\theta_0$から、新しいパラメータ$\theta$へ更新する際に、
+\begin{equation}
+  f(\theta)\leq f(\theta_0)
+\end{equation}
+が成立するようにしなければならない。直感的には、関数の傾きが下がっていく方向に少しだけ$\theta$を変化させれば上記の条件を満たすと考えられる：
+\begin{equation}
+  \theta=\theta_0-\eta f'(\theta_0),\quad\eta\ll 1\;。
+\end{equation}
+この$\eta$の値をある程度見積もるために、$\theta=\theta_0$近傍で$f(\theta)$を上から抑えることのできる簡単な形の関数を考える。
+例えば、$\theta=\theta_0$で$f(\theta_0)$と同じ値を持つ下に凸な二次関数で$f(\theta)$を上から抑えることができれば、二次関数の頂点を与える$\theta$は確実に$f(\theta)\leq f(\theta_0)$を満たす。
+そのような2次関数は、$\theta=\theta_0$で$f(\theta)$と共通接線を持つ必要がある：
+\begin{equation}
+  f(\theta)\leq f(\theta_0) + f'(\theta_0)(\theta-\theta_0) + \frac{1}{2}L(\theta-\theta_0)^2\;。
+\end{equation}
+ここで、$L$は十分大きな正の値である。これは$f(\theta)$の$\theta_0$におけるTaylor展開を2次で打ち切り、2次の係数を調整したと考えることもできる。
+このとき、
+\begin{equation}
+  f(\theta)\leq f(\theta_0)+\frac{1}{2}L\qty(\theta-\theta_0+\frac{1}{L}f'(\theta_0))^2-\frac{(f'(\theta_0))^2}{2L}
+\end{equation}
+と平方完成できるため、頂点を与える$\theta=\theta_0-f'(\theta_0)/L$に対して、
+\begin{equation}
+  f(\theta)\leq f(\theta_0)-\frac{(f'(\theta_0))^2}{2L}
+\end{equation}
+となり、確実に関数の値が減少する。最小化したい関数に対して、簡単な形の上界を持ってきて最小化することが勾配法の仕組みである。そのため、学習率$\eta$は
+\begin{equation}
+  \eta=\frac{1}{L}
+\end{equation}
+と求まる。
+\begin{figure}[t]
+  \centering
+  \begin{tikzpicture}[scale=2,samples=300]
+    \draw[->,>=stealth,semithick](-0.5,0)--(4.5,0)node[above]{$\theta$};%x軸
+    \draw[->,>=stealth,semithick](0,-0.5)--(0,3.5)node[right]{$y$};%y軸
+    \draw(0,0)node[below left]{O};%原点
+    \draw(1,0)node[above]{$1$};
+    \begin{scope} \clip (0,0) rectangle (4.5,3);
+      \draw[magenta,very thick]plot(\x,{(3*pow(\x-0.3,4)-16*pow(\x-0.3,3)+18*pow(\x-0.4,2))/25+2});
+      \draw[magenta,very thick]plot(\x,{(3*pow(2.5-0.3,4)-16*pow(2.5-0.3,3)+18*pow(2.5-0.4,2))/25+2 + (3*4*pow(2.5-0.3,3)-16*3*pow(2.5-0.3,2)+18*2*pow(2.5-0.4,1))*(\x-2.5)/25 + 2*pow(\x-2.5,2)});
+    \end{scope}
+    \draw(4.5,3)node[right]{$y=f(\theta)$};
+  \end{tikzpicture}
+  \caption{関数を上から抑えるということ}
+\end{figure}
+
+
+
+
+\subsubsection{代理関数}
 
 \section{隠れ変数を導入してリッチなモデルへ}
 
