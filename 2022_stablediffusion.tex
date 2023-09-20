@@ -218,9 +218,18 @@ $p(x)$に近いモデル$q_{\theta}(x)$を生成できるということであ�
 となる。KL情報量は、
 \begin{equation}
   D_{\text{KL}}(p_0\parallel q_{\theta}) = \int d\vv{x}\,p_0(\vv{x})\qty(\ln{p_0(\vv{x})}-q_{\theta}(\vv{x}))
-  \underbrace{=}_{\theta\text{のみ}}\frac{1}{2n}\sum_{i=1}^{n}(\vv{x}-\vv{\mu})^{\top}\Sigma^{-1}(\vv{x}-\vv{\mu}) + \frac{1}{2}\ln\det(\Sigma)
+  \underbrace{=}_{\theta\text{のみ}}\frac{1}{2n}\sum_{i=1}^{n}(\vv{x}_i-\vv{\mu})^{\top}\Sigma^{-1}(\vv{x}_i-\vv{\mu}) + \frac{1}{2}\ln\det(\Sigma)
 \end{equation}
-と計算できる。
+と計算できる。KL情報量の最小化
+\begin{align}
+  \pdv{D_{\text{KL}}}{\vv{\mu}}      & = -\frac{1}{n}\sum_{i=1}^{n}\Sigma^{-1}(\vv{x}_i-\vv{\mu}) = 0                                   &  & \Longleftrightarrow \vv{\mu}=\frac{1}{n}\sum_{i=1}^{n}\vv{x}_i \\
+  \pdv{D_{\text{KL}}}{{\Sigma}^{-1}} & = \frac{1}{2n}\sum_{i=1}^{n}(\vv{x}_i-\vv{\mu})(\vv{x}_i-\vv{\mu})^{\top} -\frac{1}{2}\Sigma = 0 &  & \Longleftrightarrow \Sigma
+  = \frac{1}{n}\sum_{i=1}^n (\vv{x}_i-\vv{\mu})(\vv{x}_i-\vv{\mu})^{\top}
+\end{align}
+によって、パラメータの最適化を行うことができる。
+
+
+\subsection{よくあるボルツマンマシン}
 
 \section{隠れ変数を導入してリッチなモデルへ}
 
@@ -235,5 +244,50 @@ $p(x)$に近いモデル$q_{\theta}(x)$を生成できるということであ�
 \section{変分オートエンコーダー}
 
 \section{階層変分オートエンコーダ}
+
+\section{Appendix}
+
+\subsection{微分に必要な線形代数の公式その1}
+$\vv{x}$を$n$次元ベクトル、$A$を$n$次正方行列とする。このとき、$\vv{x}^{\top}A\vv{x}$はスカラーであるため、
+\begin{align}
+  \dv{\vv{x}}(\vv{x}^{\top}A\vv{x}) & = \dv{\vv{x}}\trace(\vv{x}^{\top}A\vv{x}) = \dv{\vv{x}}\tr(A\vv{x}\vv{x}^{\top})
+  = \dv{\vv{x}}\sum_{i,j=1}^{n}A_{ij}(\vv{x}\vv{x}^{\top})_{ji} \notag                                                 \\
+                                    & = \sum_{i=1}^{n}\bm{e}_{i}\dv{x_i}\qty(\sum_{k,l=1}^{n}A_{kl}x_lx_k)
+  = \sum_{i=1}^{n}\bm{e}_{i}\qty(\sum_{k=1}^{n}A_{ki}x_k + \sum_{l=1}^{n}A_{il}x_l) = (A+A^{\top})\vv{x}
+\end{align}
+が成立する。なお、$\bm{e}_i$を$i$番目の基底ベクトルとして、$\dv*{\vv{x}} = \sum_{i=1}^{n}\bm{e}_i\dv*{x_i}$であることを用いた。
+分散共分散行列は対称行列であるため、
+\begin{equation}
+  \dv{\vv{x}}(\vv{x}^{\top}\Sigma^{-1}\vv{x}) = 2\Sigma^{-1}\vv{x}
+\end{equation}
+となる。
+\subsection{微分に必要な線形代数の公式その2}
+\begin{equation}
+  \dv{A_{ij}}(\vv{x}^{\top}A\vv{x})  = \dv{A_{ij}}\tr(A\vv{x}\vv{x}^{\top})
+  = \dv{A_{ij}}\sum_{i,j=1}^{n}A_{ij}(\vv{x}\vv{x}^{\top})_{ji} = x_jx_i = (\vv{x}\vv{x}^{\top})^{\top}_{~ij}
+\end{equation}
+が成立するため、
+\begin{equation}
+  \dv{A}(\vv{x}^{\top}A\vv{x})  = \vv{x}\vv{x}^{\top}
+\end{equation}
+となる。
+\subsection{微分に必要な線形代数の公式その3}
+determinantの余因子展開
+\begin{equation}
+  \det(A) = \sum_{j=1}^{n}(-1)^{i+j}A_{ij}m_{ij}\quad(m_{ij}\text{は$A\text{の}(i,j)$小行列式})
+\end{equation}
+を用いると、
+\begin{equation}
+  \qty(\dv{A}\det(A))_{ij} = \dv{A_{ij}}\sum_{j=1}^{n}(-1)^{i+j}A_{ij}m_{ij}=(-1)^{i+j}m_{ij}
+\end{equation}
+となる。さらに、余因子行列$\tilde{A}$を用いて$\det(A) = A\tilde{A}$と表されるため、
+\begin{equation}
+  \dv{A}\ln{\det(A)} = \frac{1}{\det(A)}\dv{A}\det(A) = \frac{1}{\det(A)}\tilde{A}^{\top} = (A^{-1})^{\top}
+\end{equation}
+を得る。したがって、
+\begin{equation}
+  \dv{\Sigma^{-1}}\ln{\det(\Sigma)} = -\Sigma^{\top} = -\Sigma
+\end{equation}
+となる。
 
 \end{document}
