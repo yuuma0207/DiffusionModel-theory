@@ -358,6 +358,7 @@ $\eta$についての条件を具体的に考える。$d(\vv{\theta}_0)=0$であ
 である。
 
 \section{隠れ変数を導入してリッチなモデルへ}
+\subsection{EMアルゴリズム}
 ボルツマンマシンにおいて、簡単に計算できるエネルギー関数はせいぜいガウス型までであった。
 しかし、このままでは単純なモデルしか生成することができない。そのため、異なる平均と分散を持つガウス関数の線形結合を取ったものをモデルとしてみる：
 \begin{equation}
@@ -413,6 +414,7 @@ $i$番目のデータに関して、ラベル$k$のガウス分布の重み$\gam
   \item Bで最適化したパラメータ$\theta,\,C$を用いて$\gamma_{ik}$を更新する
   \item $\gamma_{ik}$が収束するまでBとCを繰り返す
 \end{enumerate}
+これをEM(Expectation-Maximization)アルゴリズムと呼ぶ。
 \begin{figure}[H]
   \centering
   \begin{tikzpicture}[scale=3,samples=300]
