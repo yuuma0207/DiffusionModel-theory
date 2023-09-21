@@ -437,7 +437,111 @@ $i$番目のデータに関して、ラベル$k$のガウス分布の重み$\gam
   \caption{3つの混合ガウス分布によるモデル$q_{\theta}$（実線）の概念図}
 \end{figure}
 
-\subsection{隠れ変数}
+\subsection{隠れた変数}
+混合ガウス分布を考えることで、解析的な計算が可能なままモデルを複雑化することができた。
+このような考え方を一般化するために隠れ変数を導入する。
+混合ガウス分布は、複数のガウス分布の和によって構成されるモデルであるが、
+逆に何らかの$q_{\theta}(\vv{x})$が与えられた際に、それを構成するそれぞれのガウス分布自身を知ることは難しい。
+すなわち、モデルを構成するガウス分布は隠れた変数であり、その値を知ることができない。
+そのため、データ$\vv{x}$が従うモデル$q_{\theta}(\vv{x})$は、隠れた変数$\vv{z}$によって生成されていると考える：
+\begin{equation}
+  q_{\theta}(\vv{x}) = \sum_{\vv{z}}q_{\theta}(\vv{x},\vv{z}) = \sum_{\vv{z}}q_{\theta}(\vv{x}|\vv{z})q_{\theta}(\vv{z})\;。
+\end{equation}
+ここで、$q_{\theta}(\vv{x},\vv{z})$は$\vv{x}$と$\vv{z}$の結合確率であり、$q_{\theta}(\vv{x}|\vv{z})$は$\vv{x}$の$\vv{z}$による条件付き確率である。
+先ほどの混合ガウス分布では、$\qty{\vv{\mu}_k,\Sigma_k}$を隠れた変数として生成されるモデルと考えることができる。これを踏まえて、混合ガウス分布を隠れた変数の考え方を用いて再考する。
+すなわち、$\vv{\mu}_k,\,\Sigma_k$はデータベクトル$\vv{x}$の成分に依存しないとすると、
+\begin{equation}
+  q_{\theta}(z) = C_z,\quad q_{\theta}(\vv{x}|z) = \frac{1}{\sqrt{(2\pi)^{N}\det(\Sigma)}}\exp(-\frac{1}{2}(\vv{x}-\vv{\mu}_z)^{\top}\Sigma_{z}^{-1}(\vv{x}-\vv{\mu}_z))
+\end{equation}
+と表すことができ、混合確率（モデル）は
+\begin{equation}
+  q_{\theta}(\vv{x},z) = \sum_{z}q_{\theta}(\vv{x}|z)q(z) = \sum_{z}\frac{C_z}{\sqrt{(2\pi)^{N}\det(\Sigma)}}\exp(-\frac{1}{2}(\vv{x}-\vv{\mu}_z)^{\top}\Sigma_{z}^{-1}(\vv{x}-\vv{\mu}_z))
+\end{equation}
+となる。EMアルゴリズムにおいて、パラメータの偏微分を行って最適化を行った。偏微分による方法を代理関数の下界最大化という立場から考察する。
+すなわち、対数尤度関数の代理関数を見つける必要がある。
+しかし、混合ガウス分布のモデルのように隠れた変数についての和でモデルが表現されている場合、対数の中に和が出てきて計算することができない。
+そのため、
+\begin{equation}
+  \ln{q_{\theta}(\vv{x})} = \ln\frac{q_{\theta}(\vv{x},z)}{q_{\theta}(z|\vv{x})}
+\end{equation}
+と変形する。なお、$q_{\theta}(\vv{x},z)=q_{\theta}(z,\vv{x})$を用いた。右辺にある$z$の条件付き確率は未知であるため計算できない。
+しかし、適当な分布$r(z)$に従う乱数を用いて期待値を計算してみる：
+\begin{equation}
+  \sum_{z}r(z)\ln\frac{q_{\theta}(\vv{x},z)}{q_{\theta}(z|\vv{x})} = \sum_{z}r(z)\ln\frac{q_{\theta}(\vv{x},z)}{r(z)}
+  -\sum_{z}r(z)\ln\frac{q_{\theta}(z|\vv{x})}{r(z)}\;。
+\end{equation}
+すると、右辺第二項が変数$z$に関するKL情報量の形になっていることがわかる。したがって、
+\begin{equation}
+  \ln{q_{\theta}(\vv{x})} = \sum_{z}r(z)\ln\frac{q_{\theta}(\vv{x},z)}{r(z)} + D_{\text{KL}}(r(z)\parallel q_{\theta}(z|\vv{x}))
+  \geq \sum_{z}r(z)\ln\frac{q_{\theta}(\vv{x},z)}{r(z)}
+\end{equation}
+が成立する。すなわち、代理関数として
+\begin{equation}
+  \sum_{z}r(z)\ln\frac{q_{\theta}(\vv{x},z)}{r(z)}
+\end{equation}
+を最大化すれば良いことがわかる。代理関数は、期待値計算における確率分布$r(z)$とパラメータ$\theta$に関して最大化することができる。
+そのため、まずは
+\begin{equation}
+  r(z)= q_{\theta}(z|\vv{x})
+\end{equation}
+として、最大化したい関数と代理関数のギャップを埋める：
+\begin{equation}
+  \ln{q_{\theta}(\vv{x})} = \sum_{z}q_{\theta}(z|\vv{x})\ln\frac{q_{\theta}(\vv{x},z)}{q_{\theta}(z|\vv{x})}\;。
+\end{equation}
+右辺は対数の中に和が出てこない形をしているため、パラメータの偏微分が簡単に計算できる。
+すなわち、対数尤度関数の最大化は、$r(z)=q_{\theta}(z|\vv{x})$のパラメータ$\theta$を固定した状態で
+\begin{equation}
+  \max_{\theta}\qty(\frac{1}{n}\sum_{i=1}^{n}\ln{q_{\theta}(\vv{x}_i)})
+  = \max_{\theta}\qty(\frac{1}{n}\sum_{i=1}^{n} \sum_{z}q_{\theta}(z|\vv{x}_i)\ln\frac{q_{\theta}(\vv{x}_i,z)}{q_{\theta}(z|\vv{x}_i)})
+\end{equation}
+を考えることになる。これは$Q$関数
+\begin{equation}
+  Q(\theta,\theta_0)\coloneqq \frac{1}{n}\sum_{i=1}^{n} \sum_{z}q_{\theta_0}(z|\vv{x}_i)\ln{q_{\theta}(\vv{x}_i,z)}
+\end{equation}
+を$\theta$について最大化することと等しい。なお、
+\begin{equation}
+  q_{\theta}(z|\vv{x}_i) = \frac{q_{\theta}(\vv{x}_i,z)}{q_{\theta}(\vv{x}_i)}
+  = \frac{q_{\theta}(\vv{x}_i,z)}{\sum_{z}q_{\theta}(\vv{x}_i,z)} = \frac{C_z\exp(\cdots)}{\sum_{z}C_z\exp(\cdots)} = \gamma_{iz}
+\end{equation}
+となることがわかる。すなわち、$q_{\theta}(z|\vv{x})$を固定したままパラメータ$\theta$を最適化することは、
+EMアルゴリズムにおいて負担率$\gamma_{ik}$を固定したままパラメータ$\theta$を最適化したことに対応している。
+そのため、$Q$関数の最大化がEMアルゴリズムのパラメータ更新則と同じものを導くことが期待される。実際に、
+\begin{equation}
+  Q(\theta,\theta_0) = \frac{1}{n}\sum_{i=1}^{n}\sum_{z}\gamma_{iz}\qty[\qty(-\frac{1}{2}(\vv{x}_i - \vv{\mu}_z)^{\top}\Sigma_{z}^{-1}(\vv{x}_i-\vv{\mu}_z)+ \frac{1}{2}\det(\Sigma^{-1}))+\ln{C_z}]
+\end{equation}
+であることを用いると、
+\begin{align}
+  \pdv{Q(\theta,\theta_0)}{\vv{\mu}_z}    & = \frac{1}{n}\sum_{i=1}^{n}\gamma_{iz}\qty(\Sigma_z^{-1}(\vv{x}_i-\vv{\mu}_z))=0                                                  &  &
+  \Longleftrightarrow \vv{\mu}_z = \frac{\sum_{i=1}^{n}\gamma_{iz}\vv{x}_i}{\sum_{i=1}^{z}\gamma_{iz}}                                                                             \\
+  \pdv{Q(\theta,\theta_0)}{\Sigma^{-1}_z} & = \frac{1}{n}\sum_{i=1}^{n}\gamma_{iz}\qty(-\frac{1}{2}(\vv{x}_i-\vv{\mu}_z)(\vv{x}_i-\vv{\mu}_z)^{\top} + \frac{1}{2}\Sigma_z)=0 &  &
+  \Longleftrightarrow \Sigma_z = \frac{\sum_{i=1}^{n}\gamma_{iz}(\vv{x}_i-\vv{\mu}_z)(\vv{x}_i-\vv{\mu}_z)^{\top}}{\sum_{i=1}^{z}\gamma_{iz}}
+\end{align}
+となり、EMアルゴリズムの結果と一致する。また、隠れた変数の最適化も行うことができる。これは、混合ガウス分布における重みづけの係数$q_\theta(z)=C_z$の最適化のことである。
+一般に、隠れた変数の束縛条件
+\begin{equation}
+  \sum_{\vv{z}}q_{\theta}(\vv{z}) = 1
+\end{equation}
+が成立しているため、拘束付き最適化問題
+\begin{equation}
+  \max_{C_z}\qty(Q(\theta,\theta_0)+\lambda\qty(\sum_{z}C_z-1)) \eqqcolon \max_{C_z}(Q(\theta,\,\theta_0; C_z))
+\end{equation}
+を解けば良い。
+\begin{equation}
+  \pdv{Q(\theta,\theta_0;C_z)}{C_z} = \frac{1}{n}\sum_{i=1}^{n}\frac{\gamma_{iz}}{C_z} + \lambda=0
+  \Longleftrightarrow \lambda C_z = -\frac{1}{n}\sum_{i=1}^n \gamma_{iz}
+\end{equation}
+となる。$z$についての和を取ると、
+\begin{equation}
+  \lambda = -\frac{1}{n}\sum_{i=1}^n \sum_{z}\gamma_{iz}
+\end{equation}
+と求まるため、$C_z$について解きなおすと
+\begin{equation}
+  C_z = \frac{\sum_{i=1}^{n}\gamma_{iz}}{\sum_{i=1}^{n}\sum_{z}\gamma_{iz}}
+\end{equation}
+と求まる。
+このように、隠れた変数の期待値(Expectation)を取る乱数の最適化とパラメータ$\theta$による対数尤度関数の最大化(Maximization)を繰り返すことでモデルの最適化が行える。
+これがEMアルゴリズムと呼ばれる理由である。
+
 
 
 \section{制限ボルツマンマシン}
