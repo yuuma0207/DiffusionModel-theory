@@ -548,10 +548,65 @@ EMアルゴリズムにおいて負担率$\gamma_{ik}$を固定したままパ�
 データ変数を$\vv{x}$、隠れた変数を$\vv{z}$とする。
 このとき、ボルツマンマシンにおいてエネルギー関数が
 \begin{equation}
-  E_{\theta}(\vv{x},\vv{z})=\vv{x}^{\top}W\vv{z} + \vv{b}^{\top}\vv{x}+\vv{c}^{\top}\vv{z}
+  -E_{\theta}(\vv{x},\vv{z})=\vv{x}^{\top}W\vv{z} + \vv{b}^{\top}\vv{x}+\vv{c}^{\top}\vv{z}
 \end{equation}
 と表されるものを制限ボルツマンマシンと呼ぶ。
-これは、データ変数同士の相互作用と隠れた変数同士の相関がなく、データ変数と隠れた変数間の相関だけが存在するようなモデルと考えることができる。
+これは、データ変数同士の相互作用と隠れた変数同士の相関がなく、データ変数と隠れた変数間の結合だけが存在するようなモデルと考えることができる。
+例えば、データと隠れた変数が
+\begin{equation}
+  \{\vv{x}_1,\,\vv{x}_2,\,\vv{x}_3,\,\vv{x}_4\}:\text{データ}\qquad \{\vv{z}_1,\,\vv{z}_2,\,\vv{z}_3\}:\text{隠れた変数}
+\end{equation}
+とすると、結合の強さ$W$の制限ボルツマンマシンは以下のようなグラフ構造となる：
+\begin{figure}[H]
+  \centering
+  \begin{tikzpicture}[scale=0.4]
+
+    \coordinate(z1)at(-5,10);
+    \coordinate(z2)at(0,10);
+    \coordinate(z3)at(5,10);
+    \coordinate(x1)at(-7.5,0);
+    \coordinate(x2)at(-2.5,0);
+    \coordinate(x3)at(3.5,0);
+    \coordinate(x4)at(7.5,0);
+
+    \foreach\Z in{z1,z2,z3}\foreach\X in{x1,x2,x3,x4}\draw[thick](\Z)--(\X);
+    \foreach\Z in{z1,z2,z3}\fill[black](\Z)circle(0.25);
+    \foreach\X in{x1,x2,x3,x4}\filldraw[fill=lightgray,very thick](\X)circle(0.50);
+
+    \foreach\i in{1,2,3,4}\draw[black](x\i)node[below=5.5pt]{$\overrightarrow{x}_{\i}$};
+    \foreach\j in{1,2,3}\draw[black](z\j)  node[above=2pt]{$\overrightarrow{z}_{\j}$};
+    \draw[black](8,5)node[anchor=west]{$W$};
+  \end{tikzpicture}
+  \caption{制限ボルツマンマシンのグラフ構造}
+\end{figure}
+この制限ボルツマンマシンのモデルは
+\begin{equation}
+  q_{\theta}(\vv{x},\vv{z}) = \frac{1}{Z}\exp(\vv{x}^{\top}W\vv{z} + \vv{b}^{\top}\vv{x}+\vv{c}^{\top}\vv{z})
+\end{equation}
+である。データの次元を$N$、隠れた変数の次元を$N_h$とする。
+$k=1,\,2,\,\cdots,\,N,\, l=1,\,2,\,\cdots,\,N_h$に対して、
+$\vv{u}_k^{\top}$を$W$の$k$行目を取り出した横ベクトル、$\vv{v}_l$を$W$の$l$行目を取り出した縦ベクトルとすると、
+\begin{align}
+  q_{\theta}(\vv{z}) & = \sum_{\vv{x}=\{1,-1\}^{N}}q_{\theta}(\vv{x},\vv{z}) = \frac{1}{Z}\prod_{k=1}^{N}2\cosh(\vv{u}_k^{\top}\vv{z}+b_k)e^{\vv{c}^{\top}\vv{z}}     \\
+  q_{\theta}(\vv{x}) & = \sum_{\vv{z}=\{1,-1\}^{N_h}}q_{\theta}(\vv{x},\vv{z}) = \frac{1}{Z}\prod_{l=1}^{N_h}2\cosh(\vv{v}_l^{\top}\vv{x}+c_l)e^{\vv{b}^{\top}\vv{x}}
+\end{align}
+が成立する。
+したがって、$\vv{x}$の条件付き確率は
+\begin{equation}
+  q_{\theta}(\vv{x}|\vv{z}) = \frac{q_{\theta}(\vv{x},\vv{z})}{q_{\theta}(\vv{z})}
+  = \prod_{k=1}^{N}\frac{\exp(x_k\vv{u}_k^{\top}\vv{z}+b_kx_k)}{2\cosh(\vv{u}_k^{\top}\vv{z}+b_k)} = \prod_{k=1}^{N}q_{\theta}(x_k|\vv{z})
+\end{equation}
+と計算できる。このように、条件付き確率が各データについての積に分解できるとき、条件付き独立と呼ぶ。
+同様にして、$\vv{z}$の条件付き確率は
+\begin{equation}
+  q_{\theta}(\vv{z}|\vv{x}) = \frac{q_{\theta}(\vv{x},\vv{z})}{q_{\theta}(\vv{x})}
+  = \prod_{l=1}^{N_h}\frac{\exp(z_l\vv{v}_l^{\top}\vv{x}+c_lz_l)}{2\cosh(\vv{v}_l^{\top}\vv{x}+c_l)} = \prod_{l=1}^{N_h}q_{\theta}(z_l|\vv{x})
+\end{equation}
+と計算出来るため、条件付き独立となっている。$q_{\theta}(\vv{z}|\vv{x})$とは、データ$\vv{x}$が与えられたときに隠れた変数$\vv{z}$が従う確率分布であった。
+条件付き独立が成立していることから、それぞれの隠れた変数$\vv{z}_{l\in N_h}$を確率分布$q_{\theta}(z_l|\vv{x})$に従ってサンプリングを行うことができる。
+
+
+
 
 \section{マルコフ連鎖モンテカルロ法（MCMC）}
 
@@ -563,6 +618,8 @@ EMアルゴリズムにおいて負担率$\gamma_{ik}$を固定したままパ�
 
 \section{階層変分オートエンコーダ}
 
+
+\newpage
 \section{Appendix}
 
 \subsection{微分に必要な線形代数の公式その1}

@@ -1,4 +1,4 @@
-This is e-upTeX, Version 3.141592653-p4.1.0-u1.29-230214-2.6 (utf8.uptex) (TeX Live 2023) (preloaded format=uplatex 2023.5.31)  21 SEP 2023 21:05
+This is e-upTeX, Version 3.141592653-p4.1.0-u1.29-230214-2.6 (utf8.uptex) (TeX Live 2023) (preloaded format=uplatex 2023.5.31)  22 SEP 2023 23:39
 entering extended mode
  \write18 enabled.
  file:line:error style messages enabled.
@@ -1292,19 +1292,19 @@ LaTeX Font Info:    Font shape `JY2/hgt/m/n' will be
 \matrixtoks=\toks52
 [5] [6] [7]
 \matrixtoks=\toks53
-[8] [9] [10] [11] [12] [13] [14] (out/2022_stablediffusion/2022_stablediffusion
-.aux)
+[8] [9] [10] [11] [12] [13] [14] [15] (out/2022_stablediffusion/2022_stablediff
+usion.aux)
 Package rerunfilecheck Info: File `2022_stablediffusion.out' has not changed.
 (rerunfilecheck)             Checksum: 436973C7E380028AE92E715F0121D081;3068.
  ) 
 Here is how much of TeX's memory you used:
- 39451 strings out of 476693
- 804090 string characters out of 5805251
- 1893621 words of memory out of 5000000
- 59317 multiletter control sequences out of 15000+600000
+ 39504 strings out of 476693
+ 804797 string characters out of 5805251
+ 1905621 words of memory out of 5000000
+ 59370 multiletter control sequences out of 15000+600000
  566888 words of font info for 150 fonts, out of 8000000 for 9000
  934 hyphenation exceptions out of 8191
  99i,24n,94p,557b,1270s stack positions out of 10000i,1000n,20000p,200000b,200000s
 
-Output written on out/2022_stablediffusion/2022_stablediffusion.dvi (14 pages, 
-178744 bytes).
+Output written on out/2022_stablediffusion/2022_stablediffusion.dvi (15 pages, 
+195444 bytes).
