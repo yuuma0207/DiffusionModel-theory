@@ -1,0 +1,6 @@
+# Fdb version 4
+["dvipdf"] 0 "out/2022_stablediffusion/2022_stablediffusion.dvi" "out/2022_stablediffusion/2022_stablediffusion.pdf" "out/2022_stablediffusion/2022_stablediffusion" 0 -1
+  "out/2022_stablediffusion/2022_stablediffusion.dvi" 0 -1 0 "latex"
+  (generated)
+  "out/2022_stablediffusion/2022_stablediffusion.pdf"
+  (rewritten before read)

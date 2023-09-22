@@ -579,11 +579,12 @@ EMアルゴリズムにおいて負担率$\gamma_{ik}$を固定したままパ�
   \end{tikzpicture}
   \caption{制限ボルツマンマシンのグラフ構造}
 \end{figure}
-この制限ボルツマンマシンのモデルは
+\subsection{制限ボルツマンマシンの条件付き独立性}
+制限ボルツマンマシンのモデル
 \begin{equation}
   q_{\theta}(\vv{x},\vv{z}) = \frac{1}{Z}\exp(\vv{x}^{\top}W\vv{z} + \vv{b}^{\top}\vv{x}+\vv{c}^{\top}\vv{z})
 \end{equation}
-である。データの次元を$N$、隠れた変数の次元を$N_h$とする。
+に対して、データの次元を$N$、隠れた変数の次元を$N_h$とする。
 $k=1,\,2,\,\cdots,\,N,\, l=1,\,2,\,\cdots,\,N_h$に対して、
 $\vv{u}_k^{\top}$を$W$の$k$行目を取り出した横ベクトル、$\vv{v}_l$を$W$の$l$行目を取り出した縦ベクトルとすると、
 \begin{align}

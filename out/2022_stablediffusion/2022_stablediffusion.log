@@ -1,4 +1,4 @@
-This is e-upTeX, Version 3.141592653-p4.1.0-u1.29-230214-2.6 (utf8.uptex) (TeX Live 2023) (preloaded format=uplatex 2023.5.31)  22 SEP 2023 23:39
+This is e-upTeX, Version 3.141592653-p4.1.0-u1.29-230214-2.6 (utf8.uptex) (TeX Live 2023) (preloaded format=uplatex 2023.5.31)  22 SEP 2023 23:42
 entering extended mode
  \write18 enabled.
  file:line:error style messages enabled.
@@ -1197,10 +1197,11 @@ nslations-basic-dictionary')
 Package translations Info: loading dictionary `translations-basic-dictionary' f
 or `english'. on input line 8.
 Package hyperref Info: Link coloring ON on input line 8.
-(out/2022_stablediffusion/2022_stablediffusion.out) (out/2022_stablediffusion/2
-022_stablediffusion.out)
 \@outlinefile=\write4
 \openout4 = `2022_stablediffusion.out'.
+
+
+Package hyperref Warning: Rerun to get /PageLabels entry.
 
 \c@lstlisting=\count410
 \docmute@nestinglevel=\count411
@@ -1259,52 +1260,4 @@ LaTeX Font Info:    Font shape `JT2/hmc/m/n' will be
 LaTeX Font Info:    Font shape `JY2/hmc/m/n' will be
 (Font)              scaled to size 13.31541pt on input line 16.
 LaTeX Font Info:    Font shape `JT2/hgt/m/n' will be
-(Font)              scaled to size 13.31541pt on input line 16.
-LaTeX Font Info:    Font shape `JY2/hgt/m/n' will be
-(Font)              scaled to size 13.31541pt on input line 16.
-(out/2022_stablediffusion/2022_stablediffusion.toc
-LaTeX Font Info:    Font shape `JY2/hmc/m/n' will be
-(Font)              scaled to size 6.47278pt on input line 3.
-LaTeX Font Info:    Font shape `JY2/hmc/m/n' will be
-(Font)              scaled to size 4.62341pt on input line 3.
-LaTeX Font Info:    Font shape `JY2/gt/m/n' will be
-(Font)              scaled to size 9.24683pt on input line 3.
-LaTeX Font Info:    Font shape `JY2/gt/m/n' will be
-(Font)              scaled to size 6.47278pt on input line 3.
-LaTeX Font Info:    Font shape `JY2/gt/m/n' will be
-(Font)              scaled to size 4.62341pt on input line 3.
-)
-\tf@toc=\write5
-\openout5 = `2022_stablediffusion.toc'.
-
-[1
-
-]
-LaTeX Font Info:    Font shape `JT2/hmc/m/n' will be
-(Font)              scaled to size 6.47278pt on input line 28.
-LaTeX Font Info:    Font shape `JT2/hmc/m/n' will be
-(Font)              scaled to size 4.62341pt on input line 28.
-LaTeX Font Info:    Font shape `JT2/hgt/m/n' will be
-(Font)              scaled to size 11.09619pt on input line 64.
-LaTeX Font Info:    Font shape `JY2/hgt/m/n' will be
-(Font)              scaled to size 11.09619pt on input line 64.
-[2] [3] [4]
-\matrixtoks=\toks52
-[5] [6] [7]
-\matrixtoks=\toks53
-[8] [9] [10] [11] [12] [13] [14] [15] (out/2022_stablediffusion/2022_stablediff
-usion.aux)
-Package rerunfilecheck Info: File `2022_stablediffusion.out' has not changed.
-(rerunfilecheck)             Checksum: 436973C7E380028AE92E715F0121D081;3068.
- ) 
-Here is how much of TeX's memory you used:
- 39504 strings out of 476693
- 804797 string characters out of 5805251
- 1905621 words of memory out of 5000000
- 59370 multiletter control sequences out of 15000+600000
- 566888 words of font info for 150 fonts, out of 8000000 for 9000
- 934 hyphenation exceptions out of 8191
- 99i,24n,94p,557b,1270s stack positions out of 10000i,1000n,20000p,200000b,200000s
-
-Output written on out/2022_stablediffusion/2022_stablediffusion.dvi (15 pages, 
-195444 bytes).
+(Font)        
