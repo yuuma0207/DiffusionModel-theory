@@ -605,8 +605,36 @@ $\vv{u}_k^{\top}$を$W$の$k$行目を取り出した横ベクトル、$\vv{v}_l
 \end{equation}
 と計算出来るため、条件付き独立となっている。$q_{\theta}(\vv{z}|\vv{x})$とは、データ$\vv{x}$が与えられたときに隠れた変数$\vv{z}$が従う確率分布であった。
 条件付き独立が成立していることから、それぞれの隠れた変数$\vv{z}_{l\in N_h}$を確率分布$q_{\theta}(z_l|\vv{x})$に従ってサンプリングを行うことができる。
-
-
+また、$x_k$についての期待値を計算すると
+\begin{equation}
+  \sum_{\vv{x}}x_k q_{\theta}(\vv{x}|\vv{z}) = \sum_{x_k} \frac{x_k\exp(x_k\vv{u}_k^{\top}\vv{z} + b_k{\color{red}x_k})}{2\cosh(\vv{v}_l^{\top}\vv{z} + b_k)} 
+  = \tanh(\vv{u}_k^{\top}\vv{z} + b_k)\;。
+\end{equation}
+と表すことができる。{\color{red}（赤文字は講義資料のタイポです。）}
+\subsection{KL最小化（=最尤法）}
+$p_0(\vv{x}) = -n^{-1}\sum_{i=1}^{n}\delta(\vv{x}-\vv{x}_i)$であるため、
+\begin{align}
+  D(p_0(\vv{x}) \parallel q_{\theta}(x)) &= \sum_{\vv{x}}p_0(\vv{x})\qty(\ln{p_0(\vv{x})} - \ln{q_{\theta}(\vv{x})}) 
+  \underbrace{=}_{\theta\text{のみ}} -\sum_{\vv{x}}p_0(\vv{x})\ln{q_{\theta}(\vv{x})} \notag \\
+  & = -\frac{1}{n}\sum_{i=0}^{n}\ln{q_{\theta}(\vv{x}_i)}
+\end{align}
+となる。
+\subsection{EMアルゴリズム}
+\begin{equation}
+  \ln{q_{\theta}(\vv{x})} = \ln\frac{q_{\theta}(\vv{x},\,\vv{z})}{q_{\theta}(\vv{z}|\vv{x})}
+\end{equation}
+である。両辺に$\sum_{\vv{z}}r(\vv{z})$を掛けると左辺はすり抜けるため、
+\begin{equation}
+  \ln{q_{\theta}(\vv{x})} = \sum_{\vv{z}}r(\vv{z})\ln\frac{q_{\theta}(\vv{x},\,\vv{z})}{q_{\theta}(\vv{z}|\vv{x})}
+\end{equation}
+となる。KL情報量を作ることを目指して式変形をすると、
+\begin{align}
+  \sum_{\vv{z}}r(\vv{z})\ln\frac{q_{\theta}(\vv{x},\,\vv{z})}{q_{\theta}(\vv{z}|\vv{x})} 
+  & = \sum_{\vv{z}}r(\vv{z})\ln\frac{q_{\theta}(\vv{x},\,\vv{z})}{r(\vv{z})} - \sum_{\vv{z}}r(\vv{z})\ln\frac{q_{\theta}(\vv{z}|\vv{x})}{r(\vv{z})} \notag \\
+  & = \sum_{\vv{z}}r(\vv{z})\ln\frac{q_{\theta}(\vv{x},\,\vv{z})}{r(\vv{z})} + D_{\text{KL}}(r(\vv{z}) \parallel q_{\theta}(\vv{z}|\vv{x})) \notag \\
+  & \geq \sum_{\vv{z}}r(\vv{z})\ln\frac{q_{\theta}(\vv{x},\,\vv{z})}{r(\vv{z})}
+\end{align}
+となる。
 
 
 \section{マルコフ連鎖モンテカルロ法（MCMC）}
@@ -614,10 +642,6 @@ $\vv{u}_k^{\top}$を$W$の$k$行目を取り出した横ベクトル、$\vv{v}_l
 \section{交換モンテカルロ法}
 
 \section{MCMCを用いないボルツマンマシン}
-
-\section{変分オートエンコーダー}
-
-\section{階層変分オートエンコーダ}
 
 
 \newpage
