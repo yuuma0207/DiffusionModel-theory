@@ -1,0 +1,81 @@
+\documentclass{ltjsarticle}
+
+% url
+\usepackage{hyperref}
+
+% フォント設定
+\usepackage{xcolor}               % 色の設定
+\usepackage{luatexja}            % 日本語対応
+\usepackage{luatexja-fontspec}   % 日本語フォント設定
+
+% 数式用パッケージ
+\usepackage{amsmath, amssymb}    % 数式環境
+\usepackage{bm}                  % 太字の数式
+\usepackage{physics}             % 
+
+% 画像挿入用パッケージ
+\usepackage{graphicx}
+\usepackage{float}              % 図の位置を制御
+\usepackage{subcaption}
+
+% 枠表示用パッケージ
+\usepackage{ascmac}
+\usepackage{fancybox}
+
+% パウリ行列の定義
+\newcommand{\pauliX}{\begin{pmatrix} 0 & 1 \\ 1 & 0 \end{pmatrix}}
+\newcommand{\pauliY}{\begin{pmatrix} 0 & -i \\ i & 0 \end{pmatrix}}
+\newcommand{\pauliZ}{\begin{pmatrix} 1 & 0 \\ 0 & -1 \end{pmatrix}}
+\newcommand{\identitytwo}{\begin{pmatrix} 1 & 0 \\ 0 & 1 \end{pmatrix}}
+
+
+% タイトル
+\title{
+    2024年度・情報基礎科学としての数理情報学\\
+}
+
+\begin{document}
+
+\maketitle
+このノートは
+\href{https://youtube.com/playlist?list=PLsBJ3psEqyr_iFJnQjCNiuC3lVkqBoYfb&si=KQG1wQ-sp0awci4k}{2024年度・情報基礎科学としての数理情報学}
+の内容を書き起こしたものである．
+本来ならば，講義番号ごとにノートを作成すべきであろうが，
+複数の講義番号にまたがる内容があるため，内容ごとにノートを作成することにした．
+その代わり，各内容に対応する講義を記載する．
+このノートを作成するにあたり，以下の点に注意した．
+\begin{itemize}
+    \item 講義の順序・板書に忠実であること
+    \item \LaTeX で作成した数式をそのまま転用できるよう，数式に余計な装飾を加えないこと
+    \item 自身の補足はboxnote環境を用いることで区別して記載すること
+    \item 自分で理解できなかった部分に関しては明記すること
+\end{itemize}
+
+以下はこのノートにおける記号とその意味である．
+\begin{itembox}[l]{step up:}
+    ここには講義中のstep upの内容を書く
+\end{itembox}
+
+\begin{boxnote}
+    ここには，個人的に講義の内容を理解するために必要だと感じた途中計算などを書く
+\end{boxnote}
+
+これらの枠はfancyboxパッケージによって作成されいている．
+残念ながら，このパッケージでは枠の中に図形を配置したり，枠の中の数式を参照することができない（不正なインデックスを示すようになる）ので（もしかしたらできるかもしれないが…？），
+使用したことを後悔している．
+
+\newpage
+
+\tableofcontents
+
+\newpage
+
+% \input{シュレディンガー方程式.tex}
+\input{1_シュレディンガー方程式.tex}
+\input{2_フーリエ変換.tex}
+\input{3_不確定性関係.tex}
+\input{4_量子ビット.tex}
+\input{5_Landau-Zener遷移.tex}
+
+
+\end{document}
